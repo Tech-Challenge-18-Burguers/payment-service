@@ -1,0 +1,62 @@
+name: Develop Workflow
+
+on:
+  pull_request: 
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code from repository
+        uses: actions/checkout@v3
+      
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build Project
+        run: mvn clean install -DskipTests
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: SonarCloud Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} \
+          -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Check SonarQube Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+        run: |
+          echo "Waiting for SonarQube analysis to complete..."
+          sleep 20
+          result=$(curl -u "$SONAR_TOKEN": https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY)
+          status=$(echo "$result" | jq -r '.projectStatus.status')
+
+          echo "SonarQube Quality Gate status: $status"
+          if [ "$status" != "OK" ]; then
+              echo "SonarQube Quality Gate failed"
+              exit 1
+          else
+              echo "SonarQube Quality Gate passed"
+          fi
