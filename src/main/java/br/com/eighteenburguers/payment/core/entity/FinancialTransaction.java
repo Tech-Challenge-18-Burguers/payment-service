@@ -1,6 +1,7 @@
 package br.com.eighteenburguers.payment.core.entity;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class FinancialTransaction {
 
@@ -16,6 +17,13 @@ public class FinancialTransaction {
 		super();
 		this.order = order;
 		this.paymentMethod = paymentMethod;
+		this.status = FinancialTransactionStatus.WAIT_PAYMENT;
+		this.createdAt = Instant.now();
+		this.updatedAt = Instant.now();
+	}
+	
+	public FinancialTransaction() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Order getOrder() {
