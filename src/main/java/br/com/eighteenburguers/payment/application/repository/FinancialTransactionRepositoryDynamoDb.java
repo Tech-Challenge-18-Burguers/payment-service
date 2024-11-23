@@ -24,7 +24,7 @@ import software.amazon.awssdk.services.dynamodb.model.UpdateItemResponse;
 @Slf4j
 @Repository
 @AllArgsConstructor
-public class FinancialTransactionRepositoryImpl implements FinancialTransactionRepository {
+public class FinancialTransactionRepositoryDynamoDb implements FinancialTransactionRepository {
 
 	public static final String TABLE_NAME = "payment-transactions";
 	private final DynamoDbClient client;
