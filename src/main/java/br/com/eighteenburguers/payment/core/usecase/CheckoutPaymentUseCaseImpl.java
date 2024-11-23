@@ -1,5 +1,7 @@
 package br.com.eighteenburguers.payment.core.usecase;
 
+import java.time.Instant;
+
 import br.com.eighteenburguers.payment.core.entity.FinancialTransaction;
 import br.com.eighteenburguers.payment.core.entity.FinancialTransactionStatus;
 import br.com.eighteenburguers.payment.core.entity.PaymentMethod;
@@ -31,7 +33,7 @@ public class CheckoutPaymentUseCaseImpl implements CheckoutPaymentUseCase {
 				.orElseThrow(FinancialTransactionNotFoundException::new);
 
 		PaymentService service = factory.getService(financialTransaction.getPaymentMethod().getPaymentType());
-		PaymentMethod paymentMethod = service.findInfoByTransactionId(transactionId);
+		PaymentMethod paymentMethod = service.findInfoByTransactionId(financialTransaction.getPaymentMethod().getTransactionId());
 		
 		validate(financialTransaction, paymentMethod);
 
@@ -52,6 +54,7 @@ public class CheckoutPaymentUseCaseImpl implements CheckoutPaymentUseCase {
 	private void mappingPaymentMethodToFinancialTransaction(PaymentMethod payment, FinancialTransaction transaction) {
 		transaction.getPaymentMethod().setPaymentInformation(payment.getPaymentInformation());
 		transaction.setStatus(mappingStatus(payment.getStatus()));
+		transaction.setPaidIn(Instant.now());
 	}
 
 	private FinancialTransactionStatus mappingStatus(PaymentStatus status) {

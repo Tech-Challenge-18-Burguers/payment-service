@@ -30,6 +30,8 @@ public class MercadoPagoPaymentService implements PaymentService {
 		information.put(EXPIRATION_FIELD, getExpirationTime().toString());
 		
 		paymentMethod.setBillingInformation(information);
+		paymentMethod.setStatus(PaymentStatus.WAITING);
+		paymentMethod.setTransactionId(UUID.randomUUID().toString());
 		return paymentMethod;
 	}
 	
