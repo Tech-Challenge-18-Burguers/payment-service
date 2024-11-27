@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dynamodb
+  template:
+    metadata:
+      labels:
+        app: dynamodb
+    spec:
+      containers:
+        - name: dynamodb
+          image: dynamodb-local:latest
+          imagePullPolicy: "Always"
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -dbPath ./
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: dynamodb-secret
+            - configMapRef:
+                name: dynamodb-cm
+          volumeMounts:
+            - mountPath: /home/dynamodblocal/data
+              name: dynamodb-storage
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          # workingDir: /home/dynamodblocal
+      volumes:
+        - name: dynamodb-storage
+          persistentVolumeClaim:
+            claimName: dynamodb-pv-claim

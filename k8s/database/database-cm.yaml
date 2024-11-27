@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dynamodb-cm
+data:
+  DYNAMO_DB: 18Burguers
