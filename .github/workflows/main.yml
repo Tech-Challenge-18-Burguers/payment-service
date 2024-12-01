@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  DOCKER_REPOSITORY: payment-service
+  REGION_DEFAULT: "us-east-1"
+  CLUSTER_NAME: "18Burguers"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,3 +47,35 @@ jobs:
           -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_REPOSITORY }}:latest
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.REGION_DEFAULT }}
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.REGION_DEFAULT }} --name ${{ env.CLUSTER_NAME }}
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/application/payment-service-cm.yaml
+          kubectl apply -f k8s/application/payment-service-deployment.yaml
+          kubectl apply -f k8s/application/payment-service-svc.yaml
+          kubectl apply -f k8s/application/payment-service-hpa.yaml

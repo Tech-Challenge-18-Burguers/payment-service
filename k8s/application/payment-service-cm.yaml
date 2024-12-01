@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: order-service-cm
 data:
-  DB: jdbc:dynamodb://dynamodb-svc.default.svc.cluster.local:8000/18Burguers
+  PAYMENT_QUEUE: payment-queue
+  ORDER_QUEUE: order-queue
