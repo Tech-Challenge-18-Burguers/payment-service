@@ -9,6 +9,6 @@ spec:
   ports:
     - port: 80
       targetPort: 8081
-      nodePort: 30001
+      nodePort: 30003
   selector:
     app: payment-service
