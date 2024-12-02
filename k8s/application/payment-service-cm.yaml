@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-cm
+data:
+  PAYMENT_QUEUE: payment-queue
+  ORDER_QUEUE: order-queue
