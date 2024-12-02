@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: payment-service-app:latest
+          image: eighteenburguers/payment-service:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
