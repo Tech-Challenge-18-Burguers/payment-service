@@ -1,7 +1,7 @@
 name: Production Workflow
 
 on:
-  pull_request: 
+  push: 
     branches:
       - main
 
@@ -47,6 +47,25 @@ jobs:
           -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          -Dsonar.branch.name=${{ github.ref_name }}
+
+      - name: Check SonarQube Quality Gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+        run: |
+          echo "Waiting for SonarQube analysis to complete..."
+          sleep 20
+          result=$(curl -u "$SONAR_TOKEN": "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY")
+          status=$(echo "$result" | jq -r '.projectStatus.status')
+
+          echo "SonarQube Quality Gate status: $status"
+          if [ "$status" != "OK" ]; then
+              echo "SonarQube Quality Gate failed"
+              exit 1
+          else
+              echo "SonarQube Quality Gate passed"
+          fi
       
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
