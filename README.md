@@ -1,10 +1,6 @@
 # Payment Service
 
-# Order Service
-
-# Operation Service
-
-# Nome do Projeto
+# 18Burguers
 
 O **18Burguers** é um sistema de autoatendimento desenvolvido para a lanchonete de mesmo nome com o objetivo principal de oferecer aos seus clientes uma experiência eficiente, única e confiável na realização de pedidos, desde a seleção dos produtos até a sua entrega final.
 
@@ -47,7 +43,7 @@ O sistema utiliza arquitetura de **microserviços**, promovendo a separação de
 
 - **Angela Giampaoli** - [GitHub](https://github.com/angelazgiampaoli) | [LinkedIn](https://www.linkedin.com/in/angelazoldangiampaoli/)
 - **Luiz Eduardo Coutinho** - [GitHub](https://github.com/luiizmurdoki) | [LinkedIn](https://www.linkedin.com/in/luiz-coutinho-a87a45153/)
-- **Renan Fernandes Lorenzetti** - [GitHub](#) | [LinkedIn](#)
+- **Renan Fernandes Lorenzetti** - [GitHub](https://github.com/lolorenzetti) | [LinkedIn](https://www.linkedin.com/in/renan-lorenzetti/)
 - **Marcus Pioner** - [GitHub](https://github.com/marcuspionerfiap) | [LinkedIn](https://www.linkedin.com/in/marcus-pioner-923237113/)
 - **Mauricio Silva** - [GitHub](https://github.com/mauriciolimas) | [LinkedIn](https://www.linkedin.com/in/mauricio-lima-silva-546041141/)
 
