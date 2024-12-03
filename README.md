@@ -1,9 +1,5 @@
 # Payment Service
 
-# Order Service
-
-# Operation Service
-
 # Nome do Projeto
 
 O **18Burguers** é um sistema de autoatendimento desenvolvido para a lanchonete de mesmo nome com o objetivo principal de oferecer aos seus clientes uma experiência eficiente, única e confiável na realização de pedidos, desde a seleção dos produtos até a sua entrega final.
